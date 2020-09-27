@@ -4,8 +4,6 @@ char[] player = {'X', 'O'};
 float Xp,Yp;
 float h;
 float w;
-float Height = height - 100; 
-float Width  = width - 100; 
 char currnetplayer;
 String winner;
 
@@ -72,9 +70,9 @@ String checkWinner() {
 
 
 void setup(){
-  size(600, 600);
-  h = Height /3;
-  w = Width / 3;
+  size(400, 400);
+  h = height /3;
+  w = width / 3;
   currnetplayer = player[int(random(0, 1))];
    
 }
@@ -84,10 +82,10 @@ void draw(){
   background(255);
   strokeWeight(3);
   stroke(0);
-  line(w, 0, w, Height);
-  line(w * 2, 0, w * 2, Height);
-  line(0, h, Width, h);
-  line(0, h * 2, Width, h * 2);
+  line(w, 0, w, height);
+  line(w * 2, 0, w * 2, height);
+  line(0, h, width, h);
+  line(0, h * 2, width, h * 2);
   strokeWeight(4);
   for (int i = 0; i < board.length; i++){
     for (int j = 0; j < board[i].length; j++){
@@ -112,7 +110,6 @@ void draw(){
      background(255);
      textSize(30);
      fill(0);
-     text("The Winner is "+winner, height/2 - 50, width/2-50);
+     text(winner+" is Winner", height/3, width/2);
   }
 }
-
