@@ -10,28 +10,34 @@ char[] player = {'X', 'O'};
 float h;
 float w;
 char currnetplayer;
-String winner;
+String winner = "";
 char ai = player[0];
 char human = player[1];
 BestMove move;
 
+int scores(String result){
+  if (result == "X") 
+      return 1;
+  else if (result == "O") 
+      return -1;
+      
+  return 0;
+}
 
 
 void mousePressed(){
-  int j = int(mouseX / w);
-  int i = int(mouseY / h);
-  
-  if (board[i][j] == 0){
-    if (currnetplayer == ai){
-      board[i][j] = player[0];
-      currnetplayer = human;
-  }else if (currnetplayer == human){
-    board[i][j] = player[1];
+  if (currnetplayer == human){
+    int j = int(mouseX / w);
+    int i = int(mouseY / h);
+    if (board[i][j] == 0){
+    board[i][j] = human;
     currnetplayer = ai;
     bestMove();
     }
-  } 
-}
+  }else {
+    bestMove();
+  }
+} 
 
 boolean equals3(char a,char b,char c) {
   return a == b && b == c && a != 0;
@@ -83,9 +89,7 @@ void setup(){
   size(400, 400);
   h = height /3;
   w = width / 3;
-  currnetplayer = ai;
-  bestMove();
-   
+  currnetplayer = human;
 }
 
 
@@ -131,7 +135,7 @@ void draw(){
       for(int j = 0; j < board[i].length; j++){
         if (board[i][j] == 0){
           board[i][j] = ai;
-          int score = minimax(board);
+          int score = minimax(board, 0, false);
           board[i][j] = 0;
           if (score > bestScore) {
             bestScore = score;
@@ -139,11 +143,42 @@ void draw(){
             }
           }
         }
+      }
     board[move.i][move.j] = ai;
     currnetplayer = human;
-    }
   }
   
-  int minimax(char[][]copyBoard ){
-    return 1;
+  int minimax(char[][]board, int depth, boolean isMaxmizing){
+    String result =  checkWinner();
+    int Depth = depth; 
+    if (result != null){
+      return scores(result);
+      }
+    if (isMaxmizing){
+      int bestScore = -Integer.MAX_VALUE;
+       for(int i = 0; i < board.length; i++){
+        for(int j = 0; j < board[i].length; j++){
+          if (board[i][j] == 0){
+              board[i][j] = ai;
+              int score = minimax(board, Depth + 1, false);
+               board[i][j] = 0;
+               bestScore = max(score, bestScore);
+             }
+          }
+       }
+       return bestScore;
+    }else{
+      int bestScore = Integer.MAX_VALUE;
+      for(int i = 0; i < board.length; i++){
+        for(int j = 0; j < board[i].length; j++){
+            if (board[i][j] == 0){
+                board[i][j] = human;
+                int score = minimax(board, Depth + 1, true);
+                board[i][j] = 0;
+          bestScore = min(score, bestScore);
+          }
+        }
+      }
+      return bestScore;
+    }
   }
